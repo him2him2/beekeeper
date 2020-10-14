@@ -47,7 +47,7 @@ func Check(c bee.Cluster, o Options) error {
 
 	tarFile := bee.NewBufferFile("", tarReader)
 
-	if err := c.Nodes[0].UploadCollection(ctx, &tarFile); err != nil {
+	if err := c.Nodes[0].UploadCollection(ctx, tarFile); err != nil {
 		return fmt.Errorf("node %d: %w", 0, err)
 	}
 

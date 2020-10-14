@@ -45,7 +45,7 @@ func Check(c bee.Cluster, o Options) (err error) {
 	for i := 0; i < o.UploadNodeCount; i++ {
 		for j := 0; j < o.ChunksPerNode; j++ {
 			var (
-				chunk               bee.Chunk
+				chunk               swarm.Chunk
 				err                 error
 				replicatingNodes    []swarm.Address
 				nnRep, peerPoBinRep int
@@ -55,7 +55,7 @@ func Check(c bee.Cluster, o Options) (err error) {
 			if err != nil {
 				return fmt.Errorf("node %d: %w", i, err)
 			}
-			if err := c.Nodes[i].UploadBytes(ctx, &chunk); err != nil {
+			if err := c.Nodes[i].UploadChunk(ctx, chunk); err != nil {
 				return fmt.Errorf("node %d: %w", i, err)
 			}
 			uploaderToChunkPo := swarm.Proximity(overlays[i].Bytes(), chunk.Address().Bytes())

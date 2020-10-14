@@ -52,7 +52,7 @@ func Check(c bee.Cluster, o Options, pusher *push.Pusher, pushMetrics bool) (err
 			}
 
 			t0 := time.Now()
-			if err := c.Nodes[i].UploadBytes(ctx, &chunk); err != nil {
+			if err := c.Nodes[i].UploadChunk(ctx, chunk); err != nil {
 				return fmt.Errorf("node %d: %w", i, err)
 			}
 			d0 := time.Since(t0)
@@ -129,7 +129,7 @@ func CheckChunks(c bee.Cluster, o Options) (err error) {
 				return fmt.Errorf("node %d: %w", i, err)
 			}
 
-			if err := c.Nodes[i].UploadChunk(ctx, &chunk); err != nil {
+			if err := c.Nodes[i].UploadChunk(ctx, chunk); err != nil {
 				return fmt.Errorf("node %d: %w", i, err)
 			}
 
@@ -158,7 +158,7 @@ func CheckChunks(c bee.Cluster, o Options) (err error) {
 
 type chunkStreamMsg struct {
 	Index int
-	Chunk bee.Chunk
+	Chunk swarm.Chunk
 	Error error
 }
 
@@ -176,7 +176,7 @@ func chunkStream(ctx context.Context, node bee.Node, rnd *rand.Rand, count int) 
 				return
 			}
 
-			if err := n.UploadBytes(ctx, &chunk); err != nil {
+			if err := n.UploadChunk(ctx, chunk); err != nil {
 				chunkStream <- chunkStreamMsg{Index: i, Error: err}
 				return
 			}
